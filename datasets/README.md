@@ -11,8 +11,8 @@ Each CSV file lives next to the notebook that reads it, so the notebooks can use
 | `homeprices.csv` | [`01_Supervised_Learning/Linear_Regression`](../01_Supervised_Learning/Linear_Regression) | `1_1linear_regression.ipynb` | 50,000 x 4 | `area` (800 to 5,000), `bedrooms` (1 to 7), `age` (0 to 50), `price` (217,000 to 967,000); no missing values | Appears to be synthetic (generated) data; origin not documented |
 | `03_polynomial_machine_temperature.csv` | [`01_Supervised_Learning/Polynomial_Regression`](../01_Supervised_Learning/Polynomial_Regression) | `polynomial_Regression_machine_temperature.ipynb` | 250 x 2 | `Operating_Hours` (1.00 to 11.92), `Machine_Temperature_C` (39.94 to 166.15); no missing values | Practice dataset supplied with the author's regression practice questions |
 | `04_logistic_customer_churn.csv` | [`01_Supervised_Learning/Logistic_Regression`](../01_Supervised_Learning/Logistic_Regression) | `logistic_Regression_customer_churn.ipynb` | 250 x 6 | `Monthly_Bill` (20.34 to 179.95), `Tenure_Months` (2 to 72), `Support_Calls` (0 to 9), `Late_Payments` (0 to 5), `Monthly_Usage_Hours` (5.01 to 79.74), `Churn` (0/1: 186/64); no missing values | Practice dataset supplied with the author's regression practice questions |
+| `04_logistic_customer_churn.csv` (copy) | [`03_Model_Evaluation_and_Tuning/Hyperparameter_Tuning`](../03_Model_Evaluation_and_Tuning/Hyperparameter_Tuning) | `hyperparameter_tuning_churn.ipynb` | 250 x 6 | Identical copy of the file above, so that folder runs on its own | Same practice dataset |
 | `iris-flower-dataset.csv` | [`01_Supervised_Learning/KNN/data`](../01_Supervised_Learning/KNN/data) | `Knn-1.ipynb` | 150 x 5 | `sepal_length`, `sepal_width`, `petal_length`, `petal_width` (cm), `species` (`Iris-setosa`, `Iris-versicolor`, `Iris-virginica`, 50 each) | Classic Iris flower dataset (also in the UCI Machine Learning Repository). This is the original file used by the notebook, recovered from the author's own files (an `IRIS.csv`). Re-running `Knn-1.ipynb` with it reproduces all of the notebook's saved outputs exactly. |
-| `cars_dataset.csv` | [`01_Supervised_Learning/SVM`](../01_Supervised_Learning/SVM) | `5_svm_car_data.ipynb` | 1,728 x 7 | Six categorical attributes (`buying`, `maint`, `doors`, `persons`, `lug_boot`, `safety`) and the target `car` (`unacc` 1,210, `acc` 384, `good` 69, `vgood` 65) | The UCI Car Evaluation dataset (Bohanec and Rajkovic, 1988), with door and person counts written as words (`two`, `three`, `four`, `5more`, `more`). The file is byte-identical to `cars_dataset.csv` in [karthikeyanthanigai/SVM-for-car-dataset](https://github.com/karthikeyanthanigai/SVM-for-car-dataset), the repository the notebook is adapted from. That repository has no licence; see the [SVM README](../01_Supervised_Learning/SVM/README.md#source-and-attribution). |
 | `kmeans_50000_data.csv` | [`02_Unsupervised_Learning/KMeans`](../02_Unsupervised_Learning/KMeans) | `kmeans_50000_clustering.ipynb` | 50,000 x 3 | `X`, `Y` coordinates and `Original_Group` (`Group_1` to `Group_5`, 10,000 each). The model uses only `X` and `Y`. | Synthetic; the notebook describes it as generated practice data with five groups |
 | `iris.csv` | [`03_Model_Evaluation_and_Tuning/Cross_Validation`](../03_Model_Evaluation_and_Tuning/Cross_Validation) | `model evalution.ipynb` (hold-out section) | 150 x 5 | The same 150 measurements as `iris-flower-dataset.csv` above, with species labels without the `Iris-` prefix (`setosa`, `versicolor`, `virginica`, 50 each) | Classic Iris flower dataset |
 | `pyspark_salary_dataset_1000.csv` | [`04_Big_Data_PySpark`](../04_Big_Data_PySpark) | `PySparkML.ipynb` (linear regression) | 1,000 x 3 | `ID` (1 to 1,000), `Experience` (years, decimal, 1 to 20), `Salary` (integer, 22,250 to 122,182); no missing values. Only `Experience` and `Salary` are used. | Recovered from the author's own files; its rows match the notebook's saved output. In Google Colab it was uploaded and read from `/content/`; to run locally, change that path (see [`04_Big_Data_PySpark/README.md`](../04_Big_Data_PySpark/README.md#12-how-to-execute)). |
@@ -23,9 +23,9 @@ These are loaded by code and need no file.
 
 | Loader | Used by | Size | Contents |
 |---|---|---|---|
-| `load_wine()` | `01_Supervised_Learning/Random_Forest/Random_forest.ipynb`, `03_Model_Evaluation_and_Tuning/Cross_Validation/model evalution.ipynb` | 178 x 13, 3 classes | Chemical analysis of wines from three cultivars |
-| `load_iris()` | `03_Model_Evaluation_and_Tuning/Cross_Validation/model evalution.ipynb`, `03_Model_Evaluation_and_Tuning/Hyperparameter_Tuning/6_hyperparameter_tuning.ipynb` | 150 x 4, 3 classes | Iris flower measurements |
-| `load_digits()` | `02_Unsupervised_Learning/PCA/12_PCA.ipynb` | 1,797 x 64, 10 classes | 8 x 8 images of handwritten digits, pixel values 0 to 16 |
+| `load_wine()` | `01_Supervised_Learning/Random_Forest/Random_forest.ipynb`, `02_Unsupervised_Learning/PCA/pca_wine.ipynb`, `03_Model_Evaluation_and_Tuning/Cross_Validation/model evalution.ipynb` | 178 x 13, 3 classes | Chemical analysis of wines from three cultivars (UCI Wine recognition data) |
+| `load_iris()` | `03_Model_Evaluation_and_Tuning/Cross_Validation/model evalution.ipynb` | 150 x 4, 3 classes | Iris flower measurements |
+| `load_breast_cancer()` | `01_Supervised_Learning/SVM/svm_breast_cancer.ipynb` | 569 x 30, 2 classes (212 malignant, 357 benign) | Wisconsin Diagnostic Breast Cancer data: measurements of cell nuclei from images |
 
 ## Generated data
 
@@ -60,11 +60,12 @@ These files are git-ignored (see `.gitignore`).
 
 ## Excluded datasets
 
-These files are intentionally not part of this repository. The first two were removed on 22 November 2026; the others were in the author's working folders and were never added.
+These files are intentionally not part of this repository. The first three were removed on 22 November 2026; the others were in the author's working folders and were never added.
 
 | File | Reason |
 |---|---|
 | `houseprice.csv` | Removed. Codebasics tutorial data (the 6-row house-price data of the codebasics "py" tutorials), removed together with `1_linear_regression.ipynb` and `2_linear_regression_multivariate.ipynb`, the notebooks that used it. |
 | `insurance_data.csv` | Removed. Codebasics tutorial data (400 rows x 5 columns, used by the codebasics-based `3_logistic_regression.ipynb`; it appeared to match the widely used "Social Network Ads" practice dataset), removed together with that notebook. |
+| `cars_dataset.csv` | Removed. The UCI Car Evaluation dataset (1,728 rows x 7 columns) as distributed in [karthikeyanthanigai/SVM-for-car-dataset](https://github.com/karthikeyanthanigai/SVM-for-car-dataset), byte-identical to that repository's file. Removed together with `5_svm_car_data.ipynb`, the notebook adapted from that unlicensed repository. |
 | `MELBOURNE_HOUSE_PRICES_LESS.csv`, `Melbourne_housing_FULL.csv` | Not used by any notebook; about 12.3 MB; contain street addresses and real-estate agent names |
 | `diabetes_dataset.csv` | Not used by any notebook |
