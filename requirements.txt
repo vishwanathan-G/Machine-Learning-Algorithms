@@ -1,0 +1,27 @@
+# Machine-Learning-Algorithms - dependencies
+# Install with:  python -m pip install -r requirements.txt
+# Checked against Python 3.10.11 with the versions noted on the right.
+
+numpy>=1.24          # 2.2.6
+pandas>=2.0          # 2.3.3
+matplotlib>=3.7      # 3.10.9
+seaborn>=0.12        # 0.13.2  (heatmaps in KNN, Random Forest, Classification Metrics)
+scikit-learn>=1.3,<1.8  # 1.7.2 (every algorithm notebook). Kept below 1.8 because
+                        # 6_hyperparameter_tuning passes LogisticRegression(multi_class=...),
+                        # a parameter that newer scikit-learn releases removed.
+scipy>=1.10          # 1.15.3  (dendrogram in Hierarchical Clustering)
+joblib>=1.3          # 1.5.3   (saves the model in kmeans_50000_clustering)
+jupyter>=1.0         # to open and run the notebooks
+
+# ---------------------------------------------------------------------------
+# Optional - install only for the folders that need them
+# ---------------------------------------------------------------------------
+# K-Medoids (02_Unsupervised_Learning/KMedoids). scikit-learn-extra 0.3.0 is
+# built against NumPy 1.x and fails to import with NumPy 2.x ("numpy.dtype size
+# changed"), and it ships wheels only for older Python versions. Use a separate
+# Python 3.10 environment for this notebook:
+#   python -m pip install "numpy<2" "scikit-learn-extra>=0.3.0"
+#
+# PySpark (04_Big_Data_PySpark). It also needs Java 8, 11 or 17 on the machine
+# (PySpark 4.x needs Java 17 or newer, so it is kept below 4 here):
+#   python -m pip install "pyspark>=3.4,<4"

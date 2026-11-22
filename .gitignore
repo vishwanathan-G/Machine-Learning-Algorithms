@@ -1,0 +1,30 @@
+# Python and Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Secrets and local settings
+.env
+.env.*
+
+# Files the notebooks write when they are run
+*.joblib
+*.pkl
+kmeans_50000_with_clusters.csv
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Large or private data that should not be committed by accident
+*.xlsx
+*.xls
+*.zip
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
