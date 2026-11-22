@@ -4,16 +4,13 @@
 
 | File | Description |
 |---|---|
-| `5_svm_car_data.ipynb` | Multi-class SVM (linear kernel) that predicts car acceptability from six categorical attributes; reports accuracy, weighted F1 and a confusion matrix |
-| `cars_dataset.csv` | 1,728 rows x 7 columns, all categorical |
+| `svm_breast_cancer.ipynb` | Binary SVM classifier for the scikit-learn breast cancer dataset: effect of feature scaling, kernel comparison, `C`/`gamma` grid search, test-set evaluation and support vectors |
 
-## Source and attribution
+## Authorship
 
-`5_svm_car_data.ipynb` is adapted from `svm_car_data.ipynb` in the public repository [karthikeyanthanigai/SVM-for-car-dataset](https://github.com/karthikeyanthanigai/SVM-for-car-dataset) (created 2020). It has the same 12-cell structure and the same image (and, until 22 Nov 2026, the same badge), `cars_dataset.csv` is byte-identical to that repository's file, and 88% of the code lines are identical. Changes in this copy: intermediate arrays are printed, explanatory comments were added, and the dataset is read from a relative path. Notebook cell 0, which held that repository's "Open in Colab" badge, now holds an attribution note.
+**`svm_breast_cancer.ipynb` was written by Claude (an AI assistant) on 22 November 2026, at the repository owner's request, as a reference implementation. It is not the owner's own work, and the owner has not yet reworked it.** The notebook's first cell says the same.
 
-The data is the UCI Car Evaluation dataset (Bohanec and Rajkovic, 1988).
-
-The source repository has no licence. Keep this folder out of a public release unless the notebook is replaced by an own implementation or permission is obtained from the source author.
+It replaces `5_svm_car_data.ipynb`, which was adapted from a public repository without a licence (see the root README's [Sources and Attribution](../../README.md#sources-and-attribution)). That notebook and its `cars_dataset.csv` were removed from this repository; they remain in the owner's local course folder.
 
 ## 1. Algorithm Name
 
@@ -29,12 +26,12 @@ A Support Vector Machine finds the boundary (hyperplane) that separates classes 
 2. Find the hyperplane that maximises the margin, the distance to the nearest points of each class.
 3. Allow some points inside the margin or on the wrong side (soft margin). The parameter `C` controls the penalty for these violations.
 4. For non-linear problems, use a kernel function to compare points as if they had been mapped into a higher-dimensional space.
-5. For more than two classes, `SVC` trains one-vs-one classifiers internally and combines their votes.
+5. For more than two classes, `SVC` trains one-vs-one classifiers internally and combines their votes. (This notebook has two classes.)
 
 ## 4. Why It Is Used
 
 - It works well on medium-sized datasets with clear margins between classes.
-- It is effective in high-dimensional spaces.
+- It is effective in high-dimensional spaces, such as the 30 features used here.
 - Kernels make it flexible without changing the training algorithm.
 
 ## 5. Mathematical Intuition
@@ -46,6 +43,7 @@ A Support Vector Machine finds the boundary (hyperplane) that separates classes 
   - linear: `x . x'`
   - polynomial: `(gamma * x . x' + r)^d`
   - RBF: `exp(-gamma * ||x - x'||^2)`
+- Because the RBF kernel depends on distances, features on large scales (here `mean area`, in the hundreds to thousands) dominate unless the data is standardised.
 
 ## 6. Important Parameters
 
@@ -55,16 +53,17 @@ A Support Vector Machine finds the boundary (hyperplane) that separates classes 
 |---|---|---|
 | `C` | `1.0` | Penalty for margin violations; larger values fit the training data more tightly |
 | `kernel` | `'rbf'` | `'linear'`, `'poly'`, `'rbf'`, `'sigmoid'` |
-| `gamma` | `'scale'` | Kernel width for `rbf`, `poly`, `sigmoid` |
+| `gamma` | `'scale'` | Kernel width for `rbf`, `poly`, `sigmoid`; larger values make the boundary more wiggly |
 | `degree` | `3` | Degree for the `poly` kernel |
-| `decision_function_shape` | `'ovr'` | Shape of `decision_function` output for multi-class. Training is always one-vs-one. |
 | `class_weight` | `None` | `'balanced'` re-weights rare classes |
 
 **Used in this notebook**
 
-- `SVC(C=10.0, kernel="linear", decision_function_shape='ovr')`.
-- Every feature column is label-encoded with `LabelEncoder` (the same encoder object is refitted for each column), then standardised with `StandardScaler`.
-- `train_test_split(X, y, test_size=0.3, random_state=42)`: 1,209 training and 519 test rows.
+- Every model is a pipeline `make_pipeline(StandardScaler(), SVC(...))`, so the scaler is fitted on training data only (one comparison model is deliberately left unscaled).
+- `train_test_split(X, y, test_size=0.25, stratify=y, random_state=42)`: 426 training and 143 test rows.
+- Cross-validation: `StratifiedKFold(n_splits=5, shuffle=True, random_state=42)`.
+- Kernel comparison: `linear`, `poly`, `rbf` with default settings.
+- Grid search over `C` in `[0.1, 1, 10, 100]` and `gamma` in `['scale', 0.001, 0.01, 0.1]` (RBF kernel, scoring `accuracy`).
 
 ## 7. Advantages
 
@@ -82,73 +81,71 @@ A Support Vector Machine finds the boundary (hyperplane) that separates classes 
 
 ## 9. Real-World Applications
 
+- Medical diagnosis from measurements, as in this notebook.
 - Text and document classification.
 - Image classification and face detection.
 - Bioinformatics, such as protein and gene classification.
-- Quality and acceptability assessment from categorical ratings.
 
 ## 10. Python Libraries Used
 
 | Library | Used for |
 |---|---|
-| `pandas` | Loading the CSV |
-| `numpy`, `matplotlib.pyplot` | Imported (not used directly) |
-| `sklearn.preprocessing` (`LabelEncoder`, `StandardScaler`) | Encoding and scaling |
-| `sklearn.model_selection.train_test_split` | Train/test split |
+| `pandas` | Holding the features and target |
+| `numpy` | Imported |
+| `matplotlib.pyplot` | Confusion-matrix plot |
+| `sklearn.datasets.load_breast_cancer` | The dataset |
+| `sklearn.model_selection` (`train_test_split`, `GridSearchCV`, `StratifiedKFold`, `cross_val_score`) | Splitting, cross-validation and tuning |
+| `sklearn.preprocessing.StandardScaler`, `sklearn.pipeline.make_pipeline` | Scaling inside a pipeline |
 | `sklearn.svm.SVC` | The model |
-| `sklearn.metrics` (`confusion_matrix`, `accuracy_score`, `f1_score`) | Evaluation |
+| `sklearn.metrics` (`accuracy_score`, `classification_report`, `ConfusionMatrixDisplay`) | Evaluation |
 
 ## 11. Dataset Information
 
-- File: `cars_dataset.csv`, 1,728 rows x 7 columns, no missing values.
-- The data is the UCI Car Evaluation dataset (Bohanec and Rajkovic, 1988), with door and person counts written as words (`two`, `three`, `four`, `5more`; `two`, `four`, `more`). This file is a byte-identical copy of `cars_dataset.csv` from [karthikeyanthanigai/SVM-for-car-dataset](https://github.com/karthikeyanthanigai/SVM-for-car-dataset).
-
-| Column | Values |
-|---|---|
-| `buying` (price) | `vhigh`, `high`, `med`, `low` |
-| `maint` (maintenance cost) | `vhigh`, `high`, `med`, `low` |
-| `doors` | `two`, `three`, `four`, `5more` |
-| `persons` (capacity) | `two`, `four`, `more` |
-| `lug_boot` (boot size) | `small`, `med`, `big` |
-| `safety` | `low`, `med`, `high` |
-| `car` (target) | `unacc` 1,210, `acc` 384, `good` 69, `vgood` 65 |
-
-**Changes made for this repository.** With the author's approval, one line of code was changed. In the `pd.read_csv` call, the absolute local Windows path was replaced by the relative path `"cars_dataset.csv"`, so the notebook runs from this folder on any machine. On 22 Nov 2026 the first markdown cell (the source repository's "Open in Colab" badge) was replaced by an attribution note. No other code was changed, and the saved outputs are the author's original ones.
+- Built-in: `sklearn.datasets.load_breast_cancer()` (the Wisconsin Diagnostic Breast Cancer dataset). No file and no internet connection are needed.
+- 569 rows x 30 numeric features computed from images of cell nuclei (mean, standard error and "worst" value of radius, texture, perimeter, area, smoothness and others).
+- Target: `0` = malignant (212 rows), `1` = benign (357 rows).
+- The features are on very different scales; for example `mean smoothness` is about 0.05 to 0.16, while `mean radius` is about 7 to 28.
 
 ## 12. How to Execute
 
 1. Set up the environment as described in the [root README](../../README.md#getting-started).
-2. Run `python -m jupyter notebook` from the repository root and open `01_Supervised_Learning/SVM/5_svm_car_data.ipynb`.
-3. Run the cells from top to bottom. There are no input prompts.
+2. Run `python -m jupyter notebook` from the repository root and open `01_Supervised_Learning/SVM/svm_breast_cancer.ipynb`.
+3. Run the cells from top to bottom. There are no input prompts. The whole notebook runs in a few seconds on a laptop CPU.
 
 ## 13. Expected Output
 
-- The full DataFrame (1728 rows x 7 columns), the label-encoded feature matrix and the standardised feature matrix.
-- The array of predicted labels for the 519 test rows.
-- Training-set and test-set accuracy and weighted F1 score.
-- A 4 x 4 confusion matrix. Rows and columns are in alphabetical label order: `acc`, `good`, `unacc`, `vgood`.
+Results from running the notebook on 22 Nov 2026 (Python 3.10.11, scikit-learn 1.7.2). They are saved in the notebook. Because the split and cross-validation folds use `random_state=42`, a re-run with the same library versions gives the same numbers.
 
-Saved output from the author's run:
+**Effect of scaling** (RBF kernel, default settings, test set):
 
-| Metric | Training set | Test set |
+| Model | Test accuracy |
+|---|---|
+| RBF SVM without scaling | 0.923 |
+| RBF SVM with `StandardScaler` | 0.979 |
+
+**Kernel comparison** (5-fold cross-validation on the training set, scaled):
+
+| Kernel | Mean CV accuracy | Std |
 |---|---|---|
-| Accuracy | 0.7361 | 0.7168 |
-| Weighted F1 | 0.6623 | 0.6341 |
+| `linear` | 0.972 | 0.012 |
+| `poly` | 0.894 | 0.036 |
+| `rbf` | 0.967 | 0.005 |
 
-Saved confusion matrix (test set; rows = actual, columns = predicted, order `acc`, `good`, `unacc`, `vgood`):
+**Grid search** (RBF kernel): best parameters `C = 10`, `gamma = 0.001`, best mean CV accuracy 0.974. The notebook also prints the mean CV accuracy for all 16 `C`/`gamma` pairs; the weakest pair is `C = 0.1`, `gamma = 0.001` (0.706).
 
-```
-[[ 17   0 102   0]
- [  1   0  17   0]
- [  5   0 355   0]
- [ 12   0  10   0]]
-```
+**Tuned model on the test set** (143 rows): accuracy 0.979.
 
-In the saved run the model predicts only `unacc` (484 test rows) and `acc` (35 test rows); `good` and `vgood` are never predicted. About 69% of the test rows are `unacc`, so the accuracy is only a little above always predicting the majority class. A linear kernel on alphabetically label-encoded categories is a weak fit for this data. One-hot encoding or a non-linear kernel are common alternatives.
+| Class | Precision | Recall | F1 | Support |
+|---|---|---|---|---|
+| malignant | 0.98 | 0.96 | 0.97 | 53 |
+| benign | 0.98 | 0.99 | 0.98 | 90 |
 
-The notebook's first markdown cell is the attribution note. Its second markdown cell shows an image from an external web address, which needs an internet connection to display.
+The notebook also draws the test-set confusion matrix.
+
+**Support vectors:** 38 malignant and 40 benign, 78 of the 426 training points.
 
 ## Changes (22 Nov 2026)
 
-- `5_svm_car_data.ipynb`: cell 0, the source repository's "Open in Colab" badge, was replaced by an attribution note. The code cells and saved outputs are unchanged.
-- This README: added the Source and attribution section, the origin of `cars_dataset.csv` and the licence caveat.
+- Added `svm_breast_cancer.ipynb`, a reference implementation written by Claude at the owner's request (see Authorship).
+- Removed `5_svm_car_data.ipynb` and `cars_dataset.csv`, which were adapted from an unlicensed public repository. They remain in the owner's local course folder.
+- This README was rewritten for the new notebook.
