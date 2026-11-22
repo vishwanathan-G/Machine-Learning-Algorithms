@@ -6,9 +6,11 @@ Each CSV file lives next to the notebook that reads it, so the notebooks can use
 
 | File | Folder | Used by | Rows x columns | What it contains | Origin |
 |---|---|---|---|---|---|
-| `houseprice.csv` | [`01_Supervised_Learning/Linear_Regression`](../01_Supervised_Learning/Linear_Regression) | `1_linear_regression.ipynb`, `2_linear_regression_multivariate.ipynb` | 6 x 4 | `area`, `bedrooms` (one value missing), `age`, `price` | The 6-row house-price data of the codebasics "py" tutorials ([github.com/codebasics/py](https://github.com/codebasics/py)); the two notebooks follow its linear regression tutorials `ML/1_linear_reg` and `ML/2_linear_reg_multivariate`. That repository has no licence file. |
+| `01_linear_delivery_time.csv` | [`01_Supervised_Learning/Linear_Regression`](../01_Supervised_Learning/Linear_Regression) | `Linear Regression_Delivery Time Prediction.ipynb` | 250 x 2 | `Distance_km` (1.15 to 29.62), `Delivery_Time_min` (9.6 to 119.1); no missing values | Practice dataset supplied with the author's regression practice questions |
+| `02_multiple_linear_house_price.csv` | [`01_Supervised_Learning/Linear_Regression`](../01_Supervised_Learning/Linear_Regression) | `Multiple Linear Regression__House Price Prediction.ipynb` | 250 x 5 | `Area_sqft` (611 to 2,976), `Bedrooms` (1 to 5), `House_Age_years` (0 to 30), `Distance_to_CityCenter_km` (1.02 to 24.81), `Price_Lakhs` (21.77 to 272.14); no missing values | Practice dataset supplied with the author's regression practice questions |
 | `homeprices.csv` | [`01_Supervised_Learning/Linear_Regression`](../01_Supervised_Learning/Linear_Regression) | `1_1linear_regression.ipynb` | 50,000 x 4 | `area` (800 to 5,000), `bedrooms` (1 to 7), `age` (0 to 50), `price` (217,000 to 967,000); no missing values | Appears to be synthetic (generated) data; origin not documented |
-| `insurance_data.csv` | [`01_Supervised_Learning/Logistic_Regression`](../01_Supervised_Learning/Logistic_Regression) | `3_logistic_regression.ipynb` | 400 x 5 | `User ID`, `Gender`, `Age` (18 to 60), `EstimatedSalary`, `Purchased` (0/1: 257/143). The notebook uses `Age` and `Purchased`. | Appears to match a widely used "Social Network Ads" practice dataset (same columns and row count) |
+| `03_polynomial_machine_temperature.csv` | [`01_Supervised_Learning/Polynomial_Regression`](../01_Supervised_Learning/Polynomial_Regression) | `polynomial_Regression_machine_temperature.ipynb` | 250 x 2 | `Operating_Hours` (1.00 to 11.92), `Machine_Temperature_C` (39.94 to 166.15); no missing values | Practice dataset supplied with the author's regression practice questions |
+| `04_logistic_customer_churn.csv` | [`01_Supervised_Learning/Logistic_Regression`](../01_Supervised_Learning/Logistic_Regression) | `logistic_Regression_customer_churn.ipynb` | 250 x 6 | `Monthly_Bill` (20.34 to 179.95), `Tenure_Months` (2 to 72), `Support_Calls` (0 to 9), `Late_Payments` (0 to 5), `Monthly_Usage_Hours` (5.01 to 79.74), `Churn` (0/1: 186/64); no missing values | Practice dataset supplied with the author's regression practice questions |
 | `iris-flower-dataset.csv` | [`01_Supervised_Learning/KNN/data`](../01_Supervised_Learning/KNN/data) | `Knn-1.ipynb` | 150 x 5 | `sepal_length`, `sepal_width`, `petal_length`, `petal_width` (cm), `species` (`Iris-setosa`, `Iris-versicolor`, `Iris-virginica`, 50 each) | Classic Iris flower dataset (also in the UCI Machine Learning Repository). This is the original file used by the notebook, recovered from the author's own files (an `IRIS.csv`). Re-running `Knn-1.ipynb` with it reproduces all of the notebook's saved outputs exactly. |
 | `cars_dataset.csv` | [`01_Supervised_Learning/SVM`](../01_Supervised_Learning/SVM) | `5_svm_car_data.ipynb` | 1,728 x 7 | Six categorical attributes (`buying`, `maint`, `doors`, `persons`, `lug_boot`, `safety`) and the target `car` (`unacc` 1,210, `acc` 384, `good` 69, `vgood` 65) | The UCI Car Evaluation dataset (Bohanec and Rajkovic, 1988), with door and person counts written as words (`two`, `three`, `four`, `5more`, `more`). The file is byte-identical to `cars_dataset.csv` in [karthikeyanthanigai/SVM-for-car-dataset](https://github.com/karthikeyanthanigai/SVM-for-car-dataset), the repository the notebook is adapted from. That repository has no licence; see the [SVM README](../01_Supervised_Learning/SVM/README.md#source-and-attribution). |
 | `kmeans_50000_data.csv` | [`02_Unsupervised_Learning/KMeans`](../02_Unsupervised_Learning/KMeans) | `kmeans_50000_clustering.ipynb` | 50,000 x 3 | `X`, `Y` coordinates and `Original_Group` (`Group_1` to `Group_5`, 10,000 each). The model uses only `X` and `Y`. | Synthetic; the notebook describes it as generated practice data with five groups |
@@ -46,27 +48,23 @@ These are loaded by code and need no file.
 | `04_Big_Data_PySpark/Dataframe.ipynb`, `04_Big_Data_PySpark/sql.ipynb` | 10 rows | Employee table (`id`, `name`, `salary`; plus `Dept` in `sql.ipynb`) |
 | `04_Big_Data_PySpark/PySparkML.ipynb` | 3 rows each | Toy `Gender`/`Age`/`Salary`/`label` rows |
 
-## Referenced but not included
-
-| File | Referenced by | Notes |
-|---|---|---|
-| `canada_per_capita_income.csv` | Exercise text in `01_Supervised_Learning/Linear_Regression/1_linear_regression.ipynb` | Mentioned in a markdown exercise only; no code reads it. The exercise refers to the exercise folder of the codebasics tutorial. |
-| `hiring.csv` | Exercise text in `01_Supervised_Learning/Linear_Regression/2_linear_regression_multivariate.ipynb` | Mentioned in a markdown exercise only; no code reads it. The exercise refers to the exercise folder of the codebasics tutorial. |
-
 ## Files written when notebooks run
 
 These files are git-ignored (see `.gitignore`).
 
 | File | Written by |
 |---|---|
+| `delivery_model.pkl` | `01_Supervised_Learning/Linear_Regression/Linear Regression_Delivery Time Prediction.ipynb` (saved with `joblib.dump` and loaded again in the next cell) |
 | `kmeans_50000_with_clusters.csv` | `02_Unsupervised_Learning/KMeans/kmeans_50000_clustering.ipynb` |
 | `kmeans_model.joblib` | `02_Unsupervised_Learning/KMeans/kmeans_50000_clustering.ipynb` |
 
 ## Excluded datasets
 
-These files were in the author's working folders but are intentionally not part of this repository:
+These files are intentionally not part of this repository. The first two were removed on 22 November 2026; the others were in the author's working folders and were never added.
 
 | File | Reason |
 |---|---|
+| `houseprice.csv` | Removed. Codebasics tutorial data (the 6-row house-price data of the codebasics "py" tutorials), removed together with `1_linear_regression.ipynb` and `2_linear_regression_multivariate.ipynb`, the notebooks that used it. |
+| `insurance_data.csv` | Removed. Codebasics tutorial data (400 rows x 5 columns, used by the codebasics-based `3_logistic_regression.ipynb`; it appeared to match the widely used "Social Network Ads" practice dataset), removed together with that notebook. |
 | `MELBOURNE_HOUSE_PRICES_LESS.csv`, `Melbourne_housing_FULL.csv` | Not used by any notebook; about 12.3 MB; contain street addresses and real-estate agent names |
 | `diabetes_dataset.csv` | Not used by any notebook |
