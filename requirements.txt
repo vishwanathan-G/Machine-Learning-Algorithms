@@ -24,5 +24,6 @@ jupyter>=1.0         # to open and run the notebooks
 #   python -m pip install -r 02_Unsupervised_Learning/KMedoids/requirements-kmedoids.txt
 #
 # PySpark (04_Big_Data_PySpark). It also needs Java 8, 11 or 17 on the machine
-# (PySpark 4.x needs Java 17 or newer, so it is kept below 4 here):
-#   python -m pip install "pyspark>=3.4,<4"
+# (PySpark 4.x needs Java 17 or newer; the CSV-based steps were checked with
+# PySpark 4.1.1 and Java 17):
+#   python -m pip install "pyspark>=3.4"

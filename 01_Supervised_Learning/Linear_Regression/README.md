@@ -11,6 +11,12 @@
 | `houseprice.csv` | 6 rows x 4 columns (area, bedrooms, age, price) |
 | `homeprices.csv` | 50,000 rows x 4 columns (area, bedrooms, age, price) |
 
+## Source and attribution
+
+`1_linear_regression.ipynb` and `2_linear_regression_multivariate.ipynb` closely follow the codebasics "py" machine-learning tutorials ([github.com/codebasics/py](https://github.com/codebasics/py), folders `ML/1_linear_reg` and `ML/2_linear_reg_multivariate`). A comparison gave code similarity scores of 0.57 and 0.81. `houseprice.csv` is the tutorial's 6-row house-price data, and the exercise cells refer to the tutorial's exercise folder. The codebasics/py repository has no licence file.
+
+`1_1linear_regression.ipynb` and `multi_linear_reg.ipynb` did not match those sources.
+
 ## 1. Algorithm Name
 
 Linear Regression (simple and multiple), supervised learning, regression.
@@ -97,12 +103,12 @@ Linear regression models a continuous target as a weighted sum of input features
 
 | Notebook | Data | Size | Notes |
 |---|---|---|---|
-| `1_linear_regression.ipynb` | `houseprice.csv` | 6 rows x 4 columns | Only `area` (feature) and `price` (target) are used. Practice table; origin not documented. |
+| `1_linear_regression.ipynb` | `houseprice.csv` | 6 rows x 4 columns | Only `area` (feature) and `price` (target) are used. The 6-row house-price data from the codebasics tutorial (see Source and attribution). |
 | `2_linear_regression_multivariate.ipynb` | `houseprice.csv` | 6 rows x 4 columns | Features `area`, `bedrooms`, `age`; target `price`. One `bedrooms` value is missing (`NaN`) and is filled with the median (4.0). |
 | `1_1linear_regression.ipynb` | `homeprices.csv` | 50,000 rows x 4 columns | Features `area` (800 to 5,000), `bedrooms` (1 to 7), `age` (0 to 50); target `price` (217,000 to 967,000). No missing values. Appears to be synthetic data; origin not documented. |
 | `multi_linear_reg.ipynb` | Inline Python dictionary | 9 rows x 4 columns | `ENGINESIZE`, `CYLINDERS`, `FUELCONSUMPTION_COMB` (features) and `CO2EMISSIONS` (target). A code comment says the values were typed in from an image, leaving out a row with a missing CO2 value. |
 
-The markdown "Exercise" cells at the end of `1_linear_regression.ipynb` and `2_linear_regression_multivariate.ipynb` mention `canada_per_capita_income.csv` and `hiring.csv`. No code uses those files, and they are not in this repository.
+The markdown "Exercise" cells at the end of `1_linear_regression.ipynb` and `2_linear_regression_multivariate.ipynb` mention `canada_per_capita_income.csv` and `hiring.csv` in an "exercise folder". That folder belongs to the codebasics tutorial. No code uses those files, and they are not in this repository.
 
 ## 12. How to Execute
 
@@ -158,13 +164,25 @@ If you type something that is not a number, the cell prints `Invalid input. Plea
 ### `2_linear_regression_multivariate.ipynb`
 
 - Shows the median of `bedrooms` (4.0), the DataFrame after filling, the feature matrix and the target.
-- Saved output from the author's run: coefficients `[112.06244194, 23388.88007794, -3231.71790863]` for `area`, `bedrooms`, `age`, and intercept `221323.0018654043`. `model.predict([[5000, 3, 12]])` gives 813,021.24, and the hand calculation in the next cell gives the same value.
-- Notes on the saved outputs:
-  - The cell whose code is `model.intercept_` shows the three coefficients, and the cell whose code is `model.coef_` shows the intercept. The saved outputs appear to come from before the code of those two cells was swapped.
-  - The last prediction cell calls `reg.predict([[1000, 3, 20]])`, but the model in this notebook is named `model`. Its saved output (338,917.73) comes from an earlier session. In a fresh kernel that cell raises a `NameError` because `reg` is never defined.
-  - The markdown headings mention different inputs (3,000 sq ft / 3 bedrooms / 40 years, and 2,500 / 4 / 5) from the ones the code uses.
+- The saved outputs were regenerated on 22 Nov 2026 by a top-to-bottom run on `houseprice.csv`, in which all 12 code cells ran:
+
+| Cell | Saved output |
+|---|---|
+| `model.intercept_` | 221323.0018654043 |
+| `model.coef_` | `[112.06244194, 23388.88007794, -3231.71790863]` for `area`, `bedrooms`, `age` |
+| `model.predict([[5000, 3, 12]])` | 813,021.24 (the hand calculation in the next cell gives the same value) |
+| `model.predict([[1000, 3, 20]])` | 338,917.7258687 |
+
+- A scikit-learn `UserWarning` about missing feature names appears under each prediction cell, because plain lists are passed to `predict`.
+- The markdown headings above the two prediction cells still mention other inputs (3,000 sq ft / 3 bedrooms / 40 years, and 2,500 sq ft / 4 bedrooms / 5 years) than the ones the code uses. They were not changed.
 
 ### `multi_linear_reg.ipynb`
 
 - Shows the 9-row inline DataFrame, fits the model, then asks for the three inputs and prints them with `Predicted CO₂ Emission: <value> g/km`.
 - Saved output from the author's run: `Engine Size: 2.4` and `Predicted CO₂ Emission: 198.37 g/km`. The other two input values were not recorded. The current code also prints the cylinder and fuel-consumption values, which the saved output does not include, so it comes from an earlier version of the cell.
+
+## Changes (22 Nov 2026)
+
+- `2_linear_regression_multivariate.ipynb`: the last code cell called `reg.predict([[1000, 3, 20]])`, but the notebook only defines `model`. It now calls `model.predict(...)`. The notebook was re-run from top to bottom on `houseprice.csv` (all 12 code cells ran) and its saved outputs were regenerated. The `model.intercept_` and `model.coef_` cells, whose saved outputs used to be swapped, now show their own values. The last prediction gives 338,917.7258687, the same value the earlier session had saved.
+- `1_linear_regression.ipynb`, `2_linear_regression_multivariate.ipynb`, `multi_linear_reg.ipynb`: the Windows username in file paths inside saved warning outputs was replaced with `<user>` (for example `C:\Users\<user>\AppData\...`). The warning text is otherwise unchanged.
+- This README: added the Source and attribution note and the origin of `houseprice.csv`.

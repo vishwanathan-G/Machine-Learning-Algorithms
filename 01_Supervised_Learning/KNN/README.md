@@ -5,7 +5,7 @@
 | File | Description |
 |---|---|
 | `Knn-1.ipynb` | Classifies Iris flowers with KNN for k = 5 and k = 50, then compares accuracy and confusion-matrix heatmaps |
-| `data/iris-flower-dataset.csv` | Iris data, 150 rows x 5 columns. See the note in section 11 about this copy. |
+| `data/iris-flower-dataset.csv` | The original Iris CSV used by the notebook, 150 rows x 5 columns |
 
 ## 1. Algorithm Name
 
@@ -89,10 +89,9 @@ KNN classifies a new point by looking at the `k` training points closest to it a
 ## 11. Dataset Information
 
 - File: `data/iris-flower-dataset.csv`, 150 data rows x 5 columns.
-- Features: `sepal_length`, `sepal_width`, `petal_length`, `petal_width` (cm). Target: `species`, with 50 rows per class.
+- Features: `sepal_length`, `sepal_width`, `petal_length`, `petal_width` (cm). Target: `species`, with the labels `Iris-setosa`, `Iris-versicolor` and `Iris-virginica`, 50 rows each.
 - This is the classic Iris flower dataset, also available from the UCI Machine Learning Repository.
-
-**Note about this copy.** The original CSV used when the notebook was run was not available. The file in this folder is a copy of the author's `iris.csv`, supplied for this repository. It has the same column names, but its species labels are `setosa`, `versicolor` and `virginica`. The notebook's saved outputs were produced with a file labelled `Iris-setosa`, `Iris-versicolor` and `Iris-virginica`. When you re-run the notebook, predicted labels print without the `Iris-` prefix. The measurement values of the original file could not be compared, so re-run results may not match the saved outputs exactly.
+- The file is the original dataset used by the notebook. It was recovered from the author's own files (an `IRIS.csv`), and re-running the notebook with it reproduces all of its saved outputs exactly (see section 13).
 
 The notebook's first markdown cell shows an image from `media/iris-flower.png`. That image is not included in this repository, so it does not display.
 
@@ -105,15 +104,21 @@ The notebook's first markdown cell shows an image from `media/iris-flower.png`. 
 ## 13. Expected Output
 
 - The first five rows of the data, the feature matrix and the target.
-- The predicted labels for the 30 test rows for k = 5 and for k = 50.
+- The predicted labels (`Iris-setosa`, `Iris-versicolor`, `Iris-virginica`) for the 30 test rows for k = 5 and for k = 50.
 - `Accuracy: <value>` for each model.
 - Two confusion matrices (3 x 3) printed and drawn as seaborn heatmaps.
 
-Saved output from the author's run, made with the original `Iris-` labelled file:
+Saved output from the author's run. A re-run on 22 Nov 2026 with `data/iris-flower-dataset.csv` reproduced all 13 saved code-cell outputs exactly:
 
-| Model | Accuracy | Confusion matrix (rows = actual setosa, versicolor, virginica) |
+| Model | Accuracy | Confusion matrix (rows = actual Iris-setosa, Iris-versicolor, Iris-virginica) |
 |---|---|---|
 | k = 5 | 1.0 | `[[10 0 0] [0 9 0] [0 0 11]]` |
-| k = 50 | 0.9667 | `[[10 0 0] [0 9 0] [0 1 10]]`: one virginica predicted as versicolor |
+| k = 50 | 0.9666666666666667 | `[[10 0 0] [0 9 0] [0 1 10]]`: one Iris-virginica predicted as Iris-versicolor |
 
 The comparison shows the bias-variance effect of `k`. With k = 50 each vote covers almost half of the 120 training points, so the boundary between the two overlapping classes becomes smoother and one test point is misclassified.
+
+## Changes (22 Nov 2026)
+
+- `data/iris-flower-dataset.csv`: the earlier substitute copy of `iris.csv` was replaced by the original dataset, recovered from the author's own files (150 rows; labels `Iris-setosa`, `Iris-versicolor`, `Iris-virginica`).
+- `Knn-1.ipynb`: unchanged. A re-run with the recovered file reproduced all 13 saved code-cell outputs exactly.
+- This README: removed the note about the substitute copy.

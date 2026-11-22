@@ -51,7 +51,7 @@ K-Means divides data into `K` groups (clusters) so that each point belongs to th
 
 **Used in these notebooks**
 
-- `7_k_means.ipynb`: `KMeans(n_clusters=4)` with no other parameters, so cluster numbering can change between runs.
+- `7_k_means.ipynb`: `KMeans(n_clusters=4)` with no other parameters. There is no `random_state`, so cluster numbering can change between runs. The plot loop runs `for i in range(kmeans.n_clusters)` with the colours `['red', 'green', 'blue', 'hotpink']`, one per cluster.
 - `kmeans_50000_clustering.ipynb`:
   - Model selection: `KMeans(n_clusters=k, random_state=42, n_init=10)` for `k` from 2 to 8. The silhouette score is computed on a reproducible sample of 5,000 points (`random_state=42`).
   - Final model: `KMeans(n_clusters=5, random_state=42, n_init=10)` (`N_CLUSTERS = 5`).
@@ -119,9 +119,12 @@ A non-numeric entry raises a `ValueError`. In `kmeans_50000_clustering.ipynb`, f
 
 - The 8-point DataFrame and the array of 4 centroids.
 - After the input: `The point (x, y) belongs to Cluster <n>`.
-- A scatter plot of the points coloured by cluster, the centroids as black `X` markers, and the new point as a yellow star with its cluster label.
-- Saved output from the author's run: centroids `[[2, 10], [7, 4.333], [1.5, 3.5], [4.5, 8.5]]`, and `The point (6.0, 4.0) belongs to Cluster 1`.
-- The plotting loop draws clusters 0, 1 and 2 only (`range(3)` with three colours) while the model has 4 clusters. The points of the fourth cluster are not drawn as coloured points; its centroid is still shown.
+- A scatter plot of all four clusters (red, green, blue, hotpink), the centroids as black `X` markers, and the new point as a yellow star with its cluster label.
+- The saved outputs come from a re-run on 22 Nov 2026 with the inputs X = 6 and Y = 4 (the values in the earlier saved output), in which all 6 code cells ran:
+  - Centroids `[[1.5, 3.5], [4.5, 8.5], [7, 4.333], [2, 10]]`.
+  - `The point (6.0, 4.0) belongs to Cluster 2`, the cluster whose centroid is (7, 4.333).
+  - The plot shows all four clusters.
+- Because `KMeans` has no `random_state` here, a new run can number the clusters differently, so the cluster number printed for the same point can change.
 
 ### `kmeans_50000_clustering.ipynb`
 
@@ -134,3 +137,8 @@ This notebook has no saved outputs; it has not been run in its saved form. When 
 - `Inertia: <value>` and `Silhouette score on 5,000 sampled points: <value>`.
 - A plot of the 5 clusters with centroids, then the same plot with the user's new point and its predicted cluster.
 - `Saved clustered dataset to: kmeans_50000_with_clusters.csv` and `Saved trained model to: kmeans_model.joblib`.
+
+## Changes (22 Nov 2026)
+
+- `7_k_means.ipynb`: the plot loop drew only 3 of the 4 clusters (`range(3)` with three colours). It now runs `for i in range(kmeans.n_clusters)` with the colours `['red', 'green', 'blue', 'hotpink']`; `hotpink` comes from the author's own commented-out colour list. The notebook was re-run with X = 6 and Y = 4 (all 6 code cells ran) and its saved outputs were regenerated. The Windows username in the file path inside the saved warning output was replaced with `<user>`.
+- `kmeans_50000_clustering.ipynb` and `kmeans_50000_data.csv`: unchanged.

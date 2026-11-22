@@ -6,6 +6,10 @@
 |---|---|
 | `6_hyperparameter_tuning.ipynb` | Finds the best model and hyperparameters for Iris classification. It moves from manual trial and error, to `cross_val_score` in a loop, to `GridSearchCV` and `RandomizedSearchCV`, and finally a grid search over three model types (SVM, Random Forest, Logistic Regression). |
 
+## Source and attribution
+
+`6_hyperparameter_tuning.ipynb` follows the codebasics "py" grid search tutorial ([github.com/codebasics/py](https://github.com/codebasics/py), folder `ML/15_gridsearch`). A comparison gave a code similarity score of 0.97, and 96% of the code lines are identical. The codebasics/py repository has no licence file.
+
 ## 1. Algorithm Name
 
 Hyperparameter tuning with cross-validation: Grid Search (`GridSearchCV`) and Randomized Search (`RandomizedSearchCV`).
@@ -135,3 +139,8 @@ Saved output of the model comparison:
 The notebook concludes that an SVM with `C=1` and `kernel='rbf'` is the best of the models tried for this problem. The Random Forest has no `random_state`, so its score and best `n_estimators` can change between runs.
 
 The notebook also shows the full `cv_results_` dictionary and DataFrame (fit and score times, per-fold scores, ranks) and the result of `dir(clf)`. The saved `dir(clf)` list includes attributes such as `iid` that current scikit-learn versions no longer have, so that output appears to come from an older scikit-learn installation.
+
+## Changes (22 Nov 2026)
+
+- `6_hyperparameter_tuning.ipynb`: unchanged.
+- This README: added the Source and attribution note.

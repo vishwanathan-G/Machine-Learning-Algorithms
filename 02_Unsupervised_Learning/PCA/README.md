@@ -6,6 +6,10 @@
 |---|---|
 | `12_PCA.ipynb` | Explores the scikit-learn digits dataset, trains a logistic regression baseline on all 64 pixel features, then reduces dimensions with PCA (95% variance, and 2 components) and compares accuracy |
 
+## Source and attribution
+
+`12_PCA.ipynb` follows the codebasics "py" PCA tutorial ([github.com/codebasics/py](https://github.com/codebasics/py), folder `ML/18_PCA`, `PCA_tutorial_digits`). A comparison gave a code similarity score of 0.94, and 84% of the code lines are identical. The codebasics/py repository has no licence file.
+
 ## 1. Algorithm Name
 
 Principal Component Analysis (PCA), unsupervised learning, dimensionality reduction.
@@ -115,3 +119,8 @@ Saved output from the author's run:
 | Star-pattern cell | An empty line, then rows of 1 to 5 stars (consistent with an input of 6) |
 
 With 29 components (95% of the variance) the classifier does about as well as with all 64 features. With only 2 components, about 28% of the variance, accuracy drops sharply. The baseline and the PCA models use different `random_state` values for their splits, and the baseline uses scaled features while PCA is fitted on unscaled ones, so the accuracies are not an exact like-for-like comparison.
+
+## Changes (22 Nov 2026)
+
+- `12_PCA.ipynb`: unchanged.
+- This README: added the Source and attribution note.

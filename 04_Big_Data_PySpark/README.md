@@ -8,6 +8,7 @@
 | `Dataframe.ipynb` | Spark DataFrame basics: `SparkSession`, `createDataFrame`, `show`, `select`, `filter`, `col`, `withColumn`, `drop`, followed by a revision section |
 | `sql.ipynb` | Spark SQL: registering a DataFrame as a temporary view and querying it with `SELECT`, `WHERE`, `GROUP BY`, `AVG`, `COUNT` and `AS`, followed by a revision section |
 | `PySparkML.ipynb` | Spark MLlib: `StringIndexer`, `VectorAssembler`, a logistic regression classifier on toy data, and a linear regression model (salary from years of experience) with `randomSplit` and `RegressionEvaluator` (R2), followed by revision notes |
+| `pyspark_salary_dataset_1000.csv` | Salary data read by `PySparkML.ipynb`: 1,000 rows x 3 columns (`ID`, `Experience`, `Salary`) |
 
 All four notebooks were written and run in Google Colab. Each one first runs the examples with saved outputs, then has a revision section that repeats each function with a definition, syntax and a short example. The expected output for each revision example is written in a markdown cell; the revision code cells themselves have no saved outputs.
 
@@ -74,7 +75,7 @@ The MLlib models in `PySparkML.ipynb` are the same models as their scikit-learn 
   - `StringIndexer(inputCol="Gender", outputCol="GenderIndex")`
   - `VectorAssembler(inputCols=["Age", "Salary"], outputCol="features")` for the toy examples
   - `LogisticRegression(featuresCol="features", labelCol="label")`
-  - `spark.read.csv("/content/pyspark_salary_dataset_1000.csv", header=True, inferSchema=True)`
+  - `spark.read.csv("/content/pyspark_salary_dataset_1000.csv", header=True, inferSchema=True)` (the Colab path; see section 12 for running locally)
   - `VectorAssembler(inputCols=["Experience"], outputCol="features")`, with `Salary` renamed to `label`
   - `randomSplit([0.8, 0.2], seed=42)`
   - `LinearRegression(featuresCol="features", labelCol="label")` with default `maxIter`, no regularisation
@@ -125,7 +126,7 @@ The MLlib models in `PySparkML.ipynb` are the same models as their scikit-learn 
 | `Dataframe.ipynb` | Inline list of tuples | 10 employee rows with columns `id`, `name`, `salary` (10,000 to 100,000); first names used as sample values. The revision section uses a 2-row subset. |
 | `sql.ipynb` | Inline list of tuples | The same 10 employees with an extra `Dept` column (`IT`, `HR`, `Finance`, `Admin`, `R&D`), registered as the view `emp`. The revision section adds small 2-row examples. |
 | `PySparkML.ipynb` (feature and classification examples) | Inline tuples | 3 rows: `Gender`/`Age`; `Age`/`Salary`; and `Age`/`Salary`/`label` (0 or 1) |
-| `PySparkML.ipynb` (linear regression) | `pyspark_salary_dataset_1000.csv` (**not included in this repository**) | Uploaded in Colab and read from `/content/pyspark_salary_dataset_1000.csv`. Expected columns, with a header row: `ID` (integer), `Experience` (years, decimal, e.g. 6.1) and `Salary` (integer, e.g. 48760). Only `Experience` (feature) and `Salary` (label) are used. The saved split counts (838 + 162) show the file had 1,000 rows. |
+| `PySparkML.ipynb` (linear regression) | `pyspark_salary_dataset_1000.csv` (included in this folder) | 1,000 rows with a header row: `ID` (integer), `Experience` (years, decimal, e.g. 6.1) and `Salary` (integer, e.g. 48760). Only `Experience` (feature) and `Salary` (label) are used. In Colab the file was uploaded and read from `/content/pyspark_salary_dataset_1000.csv`. The file was recovered from the author's own files, and its rows match the notebook's saved output. |
 
 ## 12. How to Execute
 
@@ -133,7 +134,7 @@ The MLlib models in `PySparkML.ipynb` are the same models as their scikit-learn 
 
 1. Upload a notebook to Google Colab.
 2. If `import pyspark` fails, run `!pip install pyspark` in a new cell.
-3. Run the cells from top to bottom. In `PySparkML.ipynb`, the `files.upload()` cell opens a file picker. Choose your own CSV named `pyspark_salary_dataset_1000.csv` with the columns described above.
+3. Run the cells from top to bottom. In `PySparkML.ipynb`, the `files.upload()` cell opens a file picker. Choose `pyspark_salary_dataset_1000.csv` from this folder.
 
 **Option B: local Jupyter**
 
@@ -141,14 +142,17 @@ The MLlib models in `PySparkML.ipynb` are the same models as their scikit-learn 
 2. Install a Java runtime. `requirements.txt` notes Java 8, 11 or 17. Spark 4.x requires Java 17 or later. Set `JAVA_HOME` to the Java installation folder.
 3. Install PySpark, which is optional in `requirements.txt`:
    ```
-   python -m pip install "pyspark>=3.4,<4"
+   python -m pip install "pyspark>=3.4"
    ```
 4. Run `python -m jupyter notebook` from the repository root and open a notebook in `04_Big_Data_PySpark/`.
 5. Run the cells in order. Notes for running locally:
-   - In `PySparkML.ipynb`, skip the `from google.colab import files` cell (it works only in Colab). Put your copy of `pyspark_salary_dataset_1000.csv` next to the notebook, and change the path in the `spark.read.csv(...)` cell from `/content/pyspark_salary_dataset_1000.csv` to `pyspark_salary_dataset_1000.csv`.
-   - In `PySparkML.ipynb`, the cell containing `model = LogisticRegression()` followed by `model.fit(x,y)` uses names that are not defined anywhere in the notebook. Spark's `fit` also takes a DataFrame, not `x, y`. This cell has no saved output; skip it, or "Run All" will stop there with a `NameError`.
+   - In `PySparkML.ipynb`, skip the `from google.colab import files` cell (it works only in Colab). `pyspark_salary_dataset_1000.csv` is already next to the notebook; change the path in the `spark.read.csv(...)` cell from `/content/pyspark_salary_dataset_1000.csv` to `pyspark_salary_dataset_1000.csv`.
    - `RDD.ipynb` stops its `SparkContext` (`sc.stop()`) at the end of the first part and creates a new one at the start of the revision section, so run the cells in order.
    - On Windows, Spark may print warnings about `HADOOP_HOME` or `winutils.exe`. If the Python workers fail to start, set the `PYSPARK_PYTHON` environment variable to the Python executable of your virtual environment.
+
+**Local test (22 Nov 2026).** `PySparkML.ipynb` was run on a copy with Python 3.13.7, PySpark 4.1.1 and Java 17, with the Colab upload cell skipped and the `/content/` path pointed at the local CSV. (PySpark 4.1.1 is newer than the `<4` pin above, which `requirements.txt` sets because PySpark 4.x needs Java 17 or newer.) The CSV-based part reproduced the saved Colab outputs exactly: the data preview, the `VectorAssembler` output, the `randomSplit` counts (838 training and 162 test rows), the `LinearRegression` predictions and `R2 Score: 0.9958205217455208`.
+
+The cells that create DataFrames or RDDs from Python lists could not be run locally: `PySparkML.ipynb` cells 6 to 8 and 21 (cell numbers count from 0, markdown cells included), and the `RDD`, `Dataframe` and `sql` notebooks. On the test laptop Spark's Python worker crashed even for a three-line `parallelize().collect()` test, so this is a problem of that local environment. The saved outputs of those cells come from Google Colab, where they ran.
 
 No notebook in this folder asks for keyboard input.
 
@@ -190,15 +194,25 @@ The revision section adds `SELECT name, Dept`, `WHERE Dept = 'IT'` (3 rows), `GR
 
 ### `PySparkML.ipynb` (saved output from the author's run)
 
-| Step | Saved output |
-|---|---|
-| `StringIndexer` on `Gender` | `Male` → 0.0, `Female` → 1.0 |
-| `VectorAssembler` on `Age`, `Salary` | `features` column such as `[25.0,50000.0]` |
-| Logistic regression on 3 toy rows | predictions 0.0, 1.0, 1.0, the same as the labels (trained and evaluated on the same 3 rows) |
-| `df.show(10)` on the salary CSV | first 10 rows of `ID`, `Experience`, `Salary` |
-| `randomSplit([0.8, 0.2], seed=42)` | `Training Data Count: 838`, `Testing Data Count: 162` |
-| `predictions.show()` | test rows with `features`, `label` and `prediction` |
-| `RegressionEvaluator(metricName="r2")` | `R2 Score: 0.9958` |
-| Prediction for `Experience = 12.0` | 80,075.38 |
+The saved outputs are the author's Google Colab outputs. The last column shows the result of the local test described in section 12.
 
-If you use a different salary CSV, the counts, R2 score and prediction will differ.
+| Step | Saved output | Local test |
+|---|---|---|
+| `StringIndexer` on `Gender` (cell 6) | `Male` → 0.0, `Female` → 1.0 | Not run (DataFrame from a Python list) |
+| `VectorAssembler` on `Age`, `Salary` (cell 7) | `features` column such as `[25.0,50000.0]` | Not run (DataFrame from a Python list) |
+| Logistic regression on 3 toy rows (cell 8) | predictions 0.0, 1.0, 1.0, the same as the labels (trained and evaluated on the same 3 rows) | Not run (DataFrame from a Python list) |
+| `df.show(10)` on the salary CSV | first 10 rows of `ID`, `Experience`, `Salary` | Reproduced exactly |
+| `VectorAssembler` on `Experience` | `features` column such as `[6.1]` | Reproduced exactly |
+| `randomSplit([0.8, 0.2], seed=42)` | `Training Data Count: 838`, `Testing Data Count: 162` | Reproduced exactly |
+| `predictions.show()` | test rows with `features`, `label` and `prediction` | Reproduced exactly |
+| `RegressionEvaluator(metricName="r2")` | `R2 Score: 0.9958205217455208` | Reproduced exactly |
+| Prediction for `Experience = 12.0` (cell 21) | 80,075.38 | Not run (DataFrame from a Python list) |
+
+Cell 9 is a markdown note, not code (see Changes below). With the included CSV these are the expected values; a different salary CSV would give different counts, R2 score and prediction.
+
+## Changes (22 Nov 2026)
+
+- `PySparkML.ipynb`: cell 9 contained `model = LogisticRegression()` followed by `model.fit(x,y)`. That is the scikit-learn style: `x` and `y` are never defined in the notebook, and Spark estimators are trained on a DataFrame. The cell is now a markdown note that explains this; the cell above it already trains with `lr.fit(final_data)`. The saved Colab outputs of the other cells are kept.
+- `pyspark_salary_dataset_1000.csv`: added. The file (1,000 rows; columns `ID`, `Experience`, `Salary`) was recovered from the author's own files, and its rows match the notebook's saved output.
+- `RDD.ipynb`, `Dataframe.ipynb`, `sql.ipynb`: unchanged.
+- This README: the dataset is described as included, the local-run steps use it, the note about the old `model.fit(x,y)` cell was removed, and the local test results were added.

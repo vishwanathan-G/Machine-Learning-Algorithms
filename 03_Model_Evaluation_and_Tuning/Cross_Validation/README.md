@@ -106,7 +106,7 @@ Model evaluation estimates how well a trained model will perform on data it has 
 
 | Data | Used in | Size | Notes |
 |---|---|---|---|
-| `iris.csv` (this folder) | Hold-out section | 150 rows x 5 columns | `sepal_length`, `sepal_width`, `petal_length`, `petal_width`, `species` (`setosa`, `versicolor`, `virginica`, 50 each). Same contents as `01_Supervised_Learning/KNN/data/iris-flower-dataset.csv`. |
+| `iris.csv` (this folder) | Hold-out section | 150 rows x 5 columns | `sepal_length`, `sepal_width`, `petal_length`, `petal_width`, `species` (`setosa`, `versicolor`, `virginica`, 50 each). The same 150 measurements as `01_Supervised_Learning/KNN/data/iris-flower-dataset.csv`, whose species labels carry an `Iris-` prefix. |
 | `load_iris()` (built-in) | Bootstrap, K-fold, lazy/eager learners, repeated hold-out | 150 rows x 4 features | Regression sections use petal length (column 2) to predict petal width (column 3). Classification sections use petal length to predict the species (0, 1, 2). |
 | `load_wine()` (built-in) | Wine comparison and display | 178 rows x 13 features, 3 classes | Chemical analysis of wines |
 

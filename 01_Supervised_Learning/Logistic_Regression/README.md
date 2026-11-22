@@ -7,6 +7,10 @@
 | `3_logistic_regression.ipynb` | Binary classification: predicts whether a person buys insurance from their age, then works through the sigmoid calculation by hand; asks for an age |
 | `insurance_data.csv` | 400 rows x 5 columns (User ID, Gender, Age, EstimatedSalary, Purchased) |
 
+## Source and attribution
+
+`3_logistic_regression.ipynb` follows the codebasics "py" logistic regression tutorial ([github.com/codebasics/py](https://github.com/codebasics/py), folder `ML/7_logistic_reg`). A comparison gave a code similarity score of 0.85, and 70% of the code lines are identical. The codebasics/py repository has no licence file.
+
 ## 1. Algorithm Name
 
 Logistic Regression, supervised learning, classification.
@@ -122,3 +126,8 @@ Saved output from the author's run:
 Because the split has no `random_state`, a new run gives a different split, score and coefficients. The saved outputs also come from more than one run: the two cells that display `y_predicted` show different arrays.
 
 The last markdown cell reads "0.485 is more than 0.5" for age 43. The value computed for 43 is 0.569.
+
+## Changes (22 Nov 2026)
+
+- `3_logistic_regression.ipynb`: the Windows username in a file path inside a saved warning output was replaced with `<user>` (for example `C:\Users\<user>\AppData\...`). The warning text is otherwise unchanged. The code and the other saved outputs are unchanged.
+- This README: added the Source and attribution note.

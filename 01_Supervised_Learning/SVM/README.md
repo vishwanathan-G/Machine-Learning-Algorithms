@@ -7,6 +7,14 @@
 | `5_svm_car_data.ipynb` | Multi-class SVM (linear kernel) that predicts car acceptability from six categorical attributes; reports accuracy, weighted F1 and a confusion matrix |
 | `cars_dataset.csv` | 1,728 rows x 7 columns, all categorical |
 
+## Source and attribution
+
+`5_svm_car_data.ipynb` is adapted from `svm_car_data.ipynb` in the public repository [karthikeyanthanigai/SVM-for-car-dataset](https://github.com/karthikeyanthanigai/SVM-for-car-dataset) (created 2020). It has the same 12-cell structure and the same image (and, until 22 Nov 2026, the same badge), `cars_dataset.csv` is byte-identical to that repository's file, and 88% of the code lines are identical. Changes in this copy: intermediate arrays are printed, explanatory comments were added, and the dataset is read from a relative path. Notebook cell 0, which held that repository's "Open in Colab" badge, now holds an attribution note.
+
+The data is the UCI Car Evaluation dataset (Bohanec and Rajkovic, 1988).
+
+The source repository has no licence. Keep this folder out of a public release unless the notebook is replaced by an own implementation or permission is obtained from the source author.
+
 ## 1. Algorithm Name
 
 Support Vector Machine, Support Vector Classifier (`SVC`), supervised learning, classification.
@@ -93,7 +101,7 @@ A Support Vector Machine finds the boundary (hyperplane) that separates classes 
 ## 11. Dataset Information
 
 - File: `cars_dataset.csv`, 1,728 rows x 7 columns, no missing values.
-- The data appears to be the UCI Car Evaluation dataset, with door and person counts written as words (`two`, `three`, `four`, `5more`; `two`, `four`, `more`).
+- The data is the UCI Car Evaluation dataset (Bohanec and Rajkovic, 1988), with door and person counts written as words (`two`, `three`, `four`, `5more`; `two`, `four`, `more`). This file is a byte-identical copy of `cars_dataset.csv` from [karthikeyanthanigai/SVM-for-car-dataset](https://github.com/karthikeyanthanigai/SVM-for-car-dataset).
 
 | Column | Values |
 |---|---|
@@ -105,7 +113,7 @@ A Support Vector Machine finds the boundary (hyperplane) that separates classes 
 | `safety` | `low`, `med`, `high` |
 | `car` (target) | `unacc` 1,210, `acc` 384, `good` 69, `vgood` 65 |
 
-**Change made for this repository.** With the author's approval, one line was changed. In the `pd.read_csv` call, the absolute local Windows path was replaced by the relative path `"cars_dataset.csv"`, so the notebook runs from this folder on any machine. No other code was changed, and the saved outputs are the author's original ones.
+**Changes made for this repository.** With the author's approval, one line of code was changed. In the `pd.read_csv` call, the absolute local Windows path was replaced by the relative path `"cars_dataset.csv"`, so the notebook runs from this folder on any machine. On 22 Nov 2026 the first markdown cell (the source repository's "Open in Colab" badge) was replaced by an attribution note. No other code was changed, and the saved outputs are the author's original ones.
 
 ## 12. How to Execute
 
@@ -138,4 +146,9 @@ Saved confusion matrix (test set; rows = actual, columns = predicted, order `acc
 
 In the saved run the model predicts only `unacc` (484 test rows) and `acc` (35 test rows); `good` and `vgood` are never predicted. About 69% of the test rows are `unacc`, so the accuracy is only a little above always predicting the majority class. A linear kernel on alphabetically label-encoded categories is a weak fit for this data. One-hot encoding or a non-linear kernel are common alternatives.
 
-The notebook's first markdown cell is an "Open in Colab" badge and its second shows an image from an external web address. Both need an internet connection to display.
+The notebook's first markdown cell is the attribution note. Its second markdown cell shows an image from an external web address, which needs an internet connection to display.
+
+## Changes (22 Nov 2026)
+
+- `5_svm_car_data.ipynb`: cell 0, the source repository's "Open in Colab" badge, was replaced by an attribution note. The code cells and saved outputs are unchanged.
+- This README: added the Source and attribution section, the origin of `cars_dataset.csv` and the licence caveat.

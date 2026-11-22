@@ -5,6 +5,7 @@
 | File | Description |
 |---|---|
 | `8_k_medoids.ipynb` | K-Medoids with 2 clusters and Manhattan distance on 10 inline points; asks for a new point, predicts its cluster and plots it |
+| `requirements-kmedoids.txt` | Pinned package versions for a separate Python 3.10 environment in which this notebook was tested |
 
 ## 1. Algorithm Name
 
@@ -50,6 +51,7 @@ K-Medoids divides data into `K` clusters like K-Means, but each cluster centre i
 
 - `KMedoids(n_clusters=2, metric='manhattan')`; all other parameters at their defaults.
 - The printed and plotted cluster numbers are `label + 1`, so they read "Cluster 1" and "Cluster 2" instead of 0 and 1.
+- Tested with scikit-learn-extra 0.3.0, NumPy 1.26.4 and scikit-learn 1.7.2 on Python 3.10.11 (the versions pinned in `requirements-kmedoids.txt`).
 
 ## 7. Advantages
 
@@ -88,12 +90,15 @@ K-Medoids divides data into `K` clusters like K-Means, but each cluster centre i
 
 ## 12. How to Execute
 
-1. Set up the environment as described in the [root README](../../README.md#getting-started).
-2. Install the optional package, as noted in `requirements.txt`. It ships wheels only for older Python versions, so use Python 3.10 for this notebook:
+This notebook needs its own environment. `scikit-learn-extra` 0.3.0 is compiled against NumPy 1.x and fails to import with NumPy 2.x, and the main environment from `requirements.txt` was checked with NumPy 2.2.6. `requirements-kmedoids.txt` in this folder pins the tested versions: `numpy==1.26.4`, `scikit-learn==1.7.2`, `scikit-learn-extra==0.3.0`, `scipy==1.15.3`, `pandas==2.3.3`, `matplotlib==3.10.9` and `jupyter`.
+
+1. Install Python 3.10.
+2. In a terminal opened in `02_Unsupervised_Learning/KMedoids/`, create the environment and install the pinned versions (Windows):
    ```
-   python -m pip install "numpy<2" "scikit-learn-extra>=0.3.0"
+   py -3.10 -m venv .venv-kmedoids
+   .\.venv-kmedoids\Scripts\python.exe -m pip install -r requirements-kmedoids.txt
    ```
-3. Run `python -m jupyter notebook` from the repository root and open `02_Unsupervised_Learning/KMedoids/8_k_medoids.ipynb`.
+3. Start Jupyter from that environment, for example `.\.venv-kmedoids\Scripts\python.exe -m jupyter notebook`, and open `8_k_medoids.ipynb`.
 4. Run the cells from top to bottom. The input cell asks:
 
 | Prompt | What to type |
@@ -103,14 +108,20 @@ K-Medoids divides data into `K` clusters like K-Means, but each cluster centre i
 
 A non-numeric entry raises a `ValueError`.
 
-If the import cell shows `ValueError: numpy.dtype size changed, may indicate binary incompatibility`, the installed `scikit-learn-extra` binary was built against a different NumPy version from the one in the environment. A separate environment with a NumPy version compatible with that `scikit-learn-extra` build is the usual way around it.
+If the import cell shows `ValueError: numpy.dtype size changed, may indicate binary incompatibility`, the notebook is running in an environment with NumPy 2.x. Start Jupyter from the `.venv-kmedoids` environment described above instead.
 
 ## 13. Expected Output
 
 - After the input: `The point (x, y) belongs to Cluster <1 or 2>`.
 - A scatter plot with the two clusters in red and blue, the two medoids as black `X` markers, and the new point as a yellow star labelled with its cluster.
 
-Notes on the saved outputs:
+The saved outputs come from a re-run on 22 Nov 2026 in the `requirements-kmedoids.txt` environment, with the inputs X = 4 and Y = 6 (the values in the earlier saved output). All 6 code cells ran without errors:
 
-- The first cell (imports) has a saved `ValueError: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject`. The clustering cell has a saved `NameError: name 'KMedoids' is not defined`, which follows from the failed import.
-- The later cells still have saved outputs: `The point (4.0, 6.0) belongs to Cluster 1` and the scatter plot. Those outputs therefore appear to come from a different kernel session from the one that recorded the errors.
+- `The point (4.0, 6.0) belongs to Cluster 1`, the same result as the earlier saved output.
+- The scatter plot of the two clusters, the medoids and the new point.
+
+## Changes (22 Nov 2026)
+
+- `8_k_medoids.ipynb`: no code change. The old saved outputs (`ValueError: numpy.dtype size changed` in the import cell and the resulting `NameError: name 'KMedoids' is not defined`) were replaced by the outputs of the re-run described in section 13.
+- `requirements-kmedoids.txt`: new file with the tested versions.
+- This README: the setup steps now use `requirements-kmedoids.txt`.
