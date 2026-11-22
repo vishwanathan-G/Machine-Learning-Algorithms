@@ -19,8 +19,9 @@ jupyter>=1.0         # to open and run the notebooks
 # K-Medoids (02_Unsupervised_Learning/KMedoids). scikit-learn-extra 0.3.0 is
 # built against NumPy 1.x and fails to import with NumPy 2.x ("numpy.dtype size
 # changed"), and it ships wheels only for older Python versions. Use a separate
-# Python 3.10 environment for this notebook:
-#   python -m pip install "numpy<2" "scikit-learn-extra>=0.3.0"
+# Python 3.10 environment for this notebook, with the tested versions in
+# 02_Unsupervised_Learning/KMedoids/requirements-kmedoids.txt:
+#   python -m pip install -r 02_Unsupervised_Learning/KMedoids/requirements-kmedoids.txt
 #
 # PySpark (04_Big_Data_PySpark). It also needs Java 8, 11 or 17 on the machine
 # (PySpark 4.x needs Java 17 or newer, so it is kept below 4 here):
