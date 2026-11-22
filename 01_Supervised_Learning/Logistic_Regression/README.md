@@ -4,12 +4,12 @@
 
 | File | Description |
 |---|---|
-| `3_logistic_regression.ipynb` | Binary classification: predicts whether a person buys insurance from their age, then works through the sigmoid calculation by hand; asks for an age |
-| `insurance_data.csv` | 400 rows x 5 columns (User ID, Gender, Age, EstimatedSalary, Purchased) |
+| `logistic_Regression_customer_churn.ipynb` | Binary classification: predicts whether a customer churns from five account features, with feature scaling, accuracy, a classification report, a confusion matrix and a ROC curve; then predicts a hard-coded sample customer |
+| `04_logistic_customer_churn.csv` | 250 rows x 6 columns (`Monthly_Bill`, `Tenure_Months`, `Support_Calls`, `Late_Payments`, `Monthly_Usage_Hours`, `Churn`) |
 
-## Source and attribution
+## Source
 
-`3_logistic_regression.ipynb` follows the codebasics "py" logistic regression tutorial ([github.com/codebasics/py](https://github.com/codebasics/py), folder `ML/7_logistic_reg`). A comparison gave a code similarity score of 0.85, and 70% of the code lines are identical. The codebasics/py repository has no licence file.
+`logistic_Regression_customer_churn.ipynb` is the author's own work. It comes from the author's own practice repository (`vishwanathan-G/ML_project`), where it was written as a solution to a set of regression practice questions; `04_logistic_customer_churn.csv` is the practice dataset supplied with those questions. It replaced a notebook that closely followed the codebasics logistic regression tutorial (see [Changes](#changes-22-nov-2026)). A comparison with the tutorial sources gave code similarity scores of 0.30 to 0.37 for the replacement notebooks.
 
 ## 1. Algorithm Name
 
@@ -37,8 +37,9 @@ Logistic regression is a classification model that estimates the probability tha
 - Sigmoid: `sigmoid(z) = 1 / (1 + e^(-z))`. `sigmoid(0) = 0.5`.
 - Log-odds are linear in the features: `log(p / (1 - p)) = b0 + b1*x1 + ...`.
 - Log-loss: `L = -(1/n) * sum(y*log(p) + (1 - y)*log(1 - p))`.
-- With one feature, the decision boundary is the value of `x` where `z = 0`, i.e. `x = -b0 / b1`.
-- The notebook's markdown describes `coef_` and `intercept_` as `m` and `b` in `y = m*x + b`. In logistic regression that line gives `z`, the input to the sigmoid, not the prediction itself. The notebook's own `prediction_function` applies the sigmoid to it.
+- The decision boundary is where `z = 0` (`p = 0.5`). With one feature this is the value `x = -b0 / b1`; with several features it is a flat hyperplane.
+- Standardisation (used in the notebook): `x_scaled = (x - mean) / std`, with the mean and standard deviation of each feature taken from the training set.
+- ROC curve: the true positive rate `TP / (TP + FN)` plotted against the false positive rate `FP / (FP + TN)` as the threshold moves from 1 to 0. AUC is the area under that curve (0.5 for random ranking, 1.0 for a perfect one).
 
 ## 6. Important Parameters
 
@@ -54,10 +55,11 @@ Logistic regression is a classification model that estimates the probability tha
 
 **Used in this notebook**
 
-- Feature: `Age` only. Target: `Purchased`.
-- `train_test_split(df[['Age']], df['Purchased'], train_size=0.8)`, which gives 320 training and 80 test rows. No `random_state` is set, so the split changes on every run.
-- `LogisticRegression()` with all defaults.
-- A hand-written `sigmoid` and `prediction_function(age)` using the rounded coefficients `0.042` and `-1.53`.
+- Features: `Monthly_Bill`, `Tenure_Months`, `Support_Calls`, `Late_Payments`, `Monthly_Usage_Hours` (every column except the target). Target: `Churn` (1 = churn, 0 = no churn).
+- `train_test_split(x, y, train_size=0.8, random_state=42)`, which gives 200 training and 50 test rows. The fixed `random_state` gives the same split on every run.
+- `StandardScaler()`: `fit_transform` on the training features, `transform` on the test features and on the sample customer.
+- `LogisticRegression(max_iter=1000)`; all other parameters keep their defaults (`C=1.0`, `solver='lbfgs'`, L2 regularisation, no class weights).
+- `model.predict` uses the default 0.5 threshold. `model.predict_proba(...)[:, 1]` gives the churn probability, used for the ROC curve, the AUC and the sample customer.
 
 ## 7. Advantages
 
@@ -84,50 +86,51 @@ Logistic regression is a classification model that estimates the probability tha
 
 | Library | Used for |
 |---|---|
-| `pandas` | Loading the CSV |
-| `matplotlib.pyplot` | Scatter plot of age vs purchase |
+| `pandas` | Loading the CSV; building the one-row DataFrame for the sample customer |
 | `sklearn.model_selection.train_test_split` | Train/test split |
+| `sklearn.preprocessing.StandardScaler` | Feature scaling |
 | `sklearn.linear_model.LogisticRegression` | The model |
-| `math` (standard library) | `math.exp` in the hand-written sigmoid |
+| `sklearn.metrics` (`accuracy_score`, `classification_report`, `confusion_matrix`, `roc_curve`, `roc_auc_score`) | Evaluation |
+| `matplotlib.pyplot` | Figure with two panels; the ROC curve |
+| `seaborn` | Heatmap of the confusion matrix |
 
 ## 11. Dataset Information
 
-- File: `insurance_data.csv`, 400 rows x 5 columns, no missing values.
-- Columns: `User ID`, `Gender` (204 Female, 196 Male), `Age` (18 to 60), `EstimatedSalary` (15,000 to 150,000), `Purchased` (0 = 257 rows, 1 = 143 rows).
-- Only `Age` and `Purchased` are used by the notebook.
-- The columns and row count appear to match a widely used "Social Network Ads" practice dataset. Its exact origin is not documented in the notebook.
+- File: `04_logistic_customer_churn.csv`, 250 rows x 6 columns, no missing values. Practice dataset supplied with the author's regression practice questions.
+- Columns: `Monthly_Bill` (20.34 to 179.95), `Tenure_Months` (2 to 72), `Support_Calls` (0 to 9), `Late_Payments` (0 to 5), `Monthly_Usage_Hours` (5.01 to 79.74), `Churn` (0 = 186 rows, 1 = 64 rows).
+- The classes are imbalanced: about a quarter of the customers churn. The 50-row test set has 36 non-churn and 14 churn rows (the `support` column of the classification report).
 
 ## 12. How to Execute
 
-1. Set up the environment as described in the [root README](../../README.md#getting-started).
-2. Run `python -m jupyter notebook` from the repository root and open `01_Supervised_Learning/Logistic_Regression/3_logistic_regression.ipynb`.
+1. Set up the environment as described in the [root README](../../README.md#getting-started). The notebook also needs `seaborn`, which `requirements.txt` installs.
+2. Run `python -m jupyter notebook` from the repository root and open `01_Supervised_Learning/Logistic_Regression/logistic_Regression_customer_churn.ipynb`.
 3. Run the cells from top to bottom.
-4. The prediction cell asks `Enter the age:`. Type a whole number such as `30` or `50` and press Enter (the data covers ages 18 to 60). A decimal or non-numeric entry raises a `ValueError` because the code uses `int(...)`.
+4. The notebook does not ask for input. To score a different customer, change the values in the `sample_customer` cell (the second-to-last code cell) and run it again.
 
 ## 13. Expected Output
 
-- The 400-row DataFrame and a scatter plot of `Purchased` (0 or 1) against `Age`, drawn with red `+` markers.
-- `y_train`, `X_test`, the predicted labels for the 80 test rows and `predict_proba` (two probabilities per row).
-- `model.score(X_test, y_test)`: the accuracy on the test set.
-- After the age input, one of: `The person will purchase the insurance` or `The person will not purchase the insurance`.
-- `coef_`, `intercept_`, and the hand-calculated probabilities for ages 35 and 43.
+- The first five rows of the data (in plain text pandas shortens the column list with `...`).
+- `LogisticRegression(max_iter=1000)` after fitting.
+- `Accuracy Score: <value>%` and a classification report for the 50 test rows.
+- A figure with two panels: the confusion matrix as a heatmap (`No Churn` / `Churn` labels), and the ROC curve with the AUC in its legend and a dashed diagonal for random ranking.
+- For the sample customer: `Prediction Result: Churn` or `No Churn`, and `Churn Probability: <value>%`.
 
-Saved output from the author's run:
+Saved output (regenerated on 22 Nov 2026, see [Changes](#changes-22-nov-2026)):
 
 | Cell | Saved output |
 |---|---|
-| `model.score(X_test, y_test)` | 0.8375 |
-| `model.coef_` | 0.04150133 |
-| `model.intercept_` | -1.52726963 |
-| `prediction_function(35)` | 0.485 (below 0.5, so "will not buy") |
-| `prediction_function(43)` | 0.569 (above 0.5, so "will buy") |
-| Age input cell | `The person will purchase the insurance` (the age typed was not recorded) |
+| Accuracy (test set, 50 rows) | `Accuracy Score: 72.00%` |
+| Class 0 (no churn): precision / recall / F1 | 0.76 / 0.89 / 0.82 (support 36) |
+| Class 1 (churn): precision / recall / F1 | 0.50 / 0.29 / 0.36 (support 14) |
+| Confusion matrix (rows = true, columns = predicted) | No Churn: 32 correct, 4 predicted as Churn. Churn: 10 predicted as No Churn, 4 correct. |
+| ROC curve legend | `ROC Curve (AUC = 0.76)` |
+| Sample customer (`Monthly_Bill` 120.50, `Tenure_Months` 3, `Support_Calls` 5, `Late_Payments` 2, `Monthly_Usage_Hours` 15.0) | `Prediction Result: Churn`, `Churn Probability: 82.34%` |
 
-Because the split has no `random_state`, a new run gives a different split, score and coefficients. The saved outputs also come from more than one run: the two cells that display `y_predicted` show different arrays.
-
-The last markdown cell reads "0.485 is more than 0.5" for age 43. The value computed for 43 is 0.569.
+The model finds 4 of the 14 churners in the test set (recall 0.29 for class 1); most of its errors are churners predicted as staying. Because the split uses `random_state=42`, a new run in the same environment gives the same values.
 
 ## Changes (22 Nov 2026)
 
-- `3_logistic_regression.ipynb`: the Windows username in a file path inside a saved warning output was replaced with `<user>` (for example `C:\Users\<user>\AppData\...`). The warning text is otherwise unchanged. The code and the other saved outputs are unchanged.
-- This README: added the Source and attribution note.
+- **Notebook replacement.** `3_logistic_regression.ipynb` and `insurance_data.csv` were removed from the repository. The notebook closely followed the codebasics "py" logistic regression tutorial (code similarity 0.85). `logistic_Regression_customer_churn.ipynb` and `04_logistic_customer_churn.csv` were added: the author's own implementation (see [Source](#source)).
+- **Fix.** Cell 6 (the plot cell) drew the ROC curve from `y_proba`, which the notebook never defined, so a fresh run raised a `NameError`. One line was added to cell 5 (the metrics cell): `y_proba = model.predict_proba(X_test_scaled)[:, 1]`. The notebook was then re-run and its saved outputs regenerated. They match the author's earlier saved run in 8 of 9 code cells; the 9th, the data preview, differs only in pandas' plain-text wrapping.
+- **Test** (Python 3.10.11, scikit-learn 1.7.2, run from top to bottom on a copy): after the fix, 9 of 9 code cells ran.
+- This README: the Source and attribution note about the removed notebook was replaced by the [Source](#source) note, and the files table and sections 5, 6 and 10 to 13 were rewritten for the new notebook.
